@@ -1,0 +1,587 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Open+Sans:wght@400;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.home-container {
+  font-family: 'Open Sans', sans-serif;
+  background: linear-gradient(135deg, #e3f2fd 0%, #c8e6c9 100%), url('https://www.transparenttextures.com/patterns/food.png');
+  background-blend-mode: overlay;
+  min-height: 100vh;
+  padding: 50px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.home-container.dark {
+  background: linear-gradient(135deg, #1a237e 0%, #263238 100%), url('https://www.transparenttextures.com/patterns/food.png');
+  background-blend-mode: overlay;
+  color: #e0e0e0;
+}
+
+.home-container.dark .nutrition-card,
+.home-container.dark .exercise-card,
+.home-container.dark .graph-section {
+  background: linear-gradient(145deg, #37474f 0%, #263238 100%);
+  color: #e0e0e0;
+  border: 1px solid #455a64;
+}
+
+.home-container.dark .nutrition-item,
+.home-container.dark .exercise-item {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.home-container.dark .nutrition-item span,
+.home-container.dark .exercise-item span {
+  color: #b0bec5;
+}
+
+.home-container.dark .nutrition-item span strong,
+.home-container.dark .exercise-item span strong {
+  color: #ffffff;
+}
+
+.home-container.dark .nutrition-icon,
+.home-container.dark .exercise-item img {
+  filter: brightness(0) invert(1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  margin-bottom: 30px;
+}
+
+.theme-toggle, .logout-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #2e7d32;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.logout-btn {
+  font-size: 1rem;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #ef5350 0%, #d32f2f 100%);
+  color: #fff;
+  border-radius: 20px;
+}
+
+.theme-toggle:hover, .logout-btn:hover {
+  color: #388e3c;
+  transform: scale(1.1);
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #d32f2f 0%, #ef5350 100%);
+  color: #fff;
+}
+
+.title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #2e7d32;
+  margin-bottom: 40px;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+  animation: bounceIn 1s ease-in-out;
+}
+
+.home-container.dark .title {
+  color: #66bb6a;
+  text-shadow: 0 0 8px rgba(102, 187, 106, 0.5);
+}
+
+.nutrition-card h2, .exercise-card h2, .graph-section h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #2e7d32;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.home-container.dark .nutrition-card h2,
+.home-container.dark .exercise-card h2,
+.home-container.dark .graph-section h2 {
+  color: #66bb6a;
+  text-shadow: 0 0 6px rgba(102, 187, 106, 0.4);
+}
+
+.search-section {
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 40px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+}
+
+.home-container.dark .search-section {
+  background: rgba(55, 71, 79, 0.95);
+  border: 1px solid #546e7a;
+}
+
+.search-bar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar input {
+  width: 100%;
+  max-width: 550px;
+  padding: 14px 25px;
+  font-size: 1.1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 30px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 20px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.search-bar input:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 10px rgba(46, 125, 50, 0.2);
+}
+
+.multi-inputs-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.multi-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  width: 100%;
+  max-width: 550px;
+  animation: slideIn 0.5s ease-in-out;
+}
+
+.multi-input input {
+  flex: 1;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 30px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.multi-input input:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 8px rgba(46, 125, 50, 0.2);
+}
+
+.multi-input .remove-btn {
+  padding: 8px 12px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #ef5350;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.multi-input .remove-btn:hover {
+  background-color: #d32f2f;
+  transform: scale(1.1);
+}
+
+.search-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.action-button,
+.search-buttons button {
+  padding: 12px 25px;
+  font-size: 1rem;
+  color: #fff;
+  background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+}
+
+.action-button:hover,
+.search-buttons button:hover {
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  transform: scale(1.05);
+}
+
+.search-buttons button:disabled {
+  background: #b0bec5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.clear-btn {
+  background: linear-gradient(135deg, #78909c 0%, #546e7a 100%) !important;
+}
+
+.clear-btn:hover {
+  background: linear-gradient(135deg, #546e7a 0%, #78909c 100%) !important;
+}
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #fff;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.error-message {
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 12px 25px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  text-align: center;
+  font-weight: 600;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.content-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 40px;
+}
+
+.nutrition-card, .exercise-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 550px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e0e0e0;
+}
+
+.nutrition-card:hover, .exercise-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.nutrition-grid, .exercise-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.nutrition-item, .exercise-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 10px;
+  background-color: rgba(46, 125, 50, 0.05);
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeInItem 0.5s ease-in-out;
+}
+
+.nutrition-item:hover, .exercise-item:hover {
+  background-color: rgba(46, 125, 50, 0.15);
+  transform: scale(1.02);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nutrition-item span, .exercise-item span {
+  font-size: 1rem;
+  color: #263238;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nutrition-item:hover span, .exercise-item:hover span {
+  color: #2e7d32;
+}
+
+.nutrition-item span strong, .exercise-item span strong {
+  color: #263238;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.nutrition-item:hover span strong, .exercise-item:hover span strong {
+  color: #2e7d32;
+}
+
+.nutrition-icon {
+  color: #2e7d32;
+  font-size: 1.4rem;
+  transition: transform 0.3s ease;
+}
+
+.nutrition-item:hover .nutrition-icon {
+  transform: rotate(20deg);
+}
+
+.exercise-item img {
+  width: 32px;
+  height: 32px;
+  transition: transform 0.3s ease;
+}
+
+.exercise-item:hover img {
+  transform: rotate(20deg);
+}
+
+.exercise-tooltip {
+  position: relative;
+  cursor: pointer;
+  flex: 1;
+}
+
+.exercise-tooltip .tooltip-text {
+  visibility: hidden;
+  width: 220px;
+  background-color: #263238;
+  color: #fff;
+  text-align: center;
+  padding: 6px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.exercise-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.share-btn {
+  margin-top: 25px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+}
+
+.share-btn:hover {
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  transform: scale(1.05);
+}
+
+.graph-section {
+  width: 100%;
+  max-width: 900px;
+  background: linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e0e0e0;
+}
+
+.graph-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.chart-grid {
+  stroke: #e0e0e0;
+  stroke-opacity: 0.5;
+}
+
+.home-container.dark .chart-grid {
+  stroke: #546e7a;
+}
+
+.chart-axis text {
+  fill: #263238;
+  font-size: 12px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.home-container.dark .chart-axis text {
+  fill: #b0bec5;
+}
+
+.chart-bar {
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.chart-bar:hover {
+  cursor: pointer;
+}
+
+.home-container.dark .recharts-tooltip-wrapper .recharts-tooltip {
+  background-color: #263238 !important;
+  color: #e0e0e0 !important;
+  border: 1px solid #546e7a !important;
+}
+
+.home-container.dark .recharts-legend-item text {
+  fill: #b0bec5 !important;
+}
+
+.recharts-legend-item text {
+  fill: #263238;
+}
+
+.recharts-legend-item:hover text {
+  fill: #2e7d32;
+}
+
+.footer-button {
+  text-align: center;
+}
+
+.trends-button {
+  padding: 14px 35px;
+  font-size: 1.1rem;
+  color: #fff;
+  background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+}
+
+.trends-button:hover {
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  transform: scale(1.05);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeInItem {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.2rem;
+  }
+
+  .search-section {
+    padding: 20px;
+  }
+
+  .search-bar input, .multi-input input {
+    font-size: 0.95rem;
+    padding: 12px 20px;
+  }
+
+  .nutrition-card, .exercise-card {
+    max-width: 100%;
+  }
+
+  .nutrition-card h2, .exercise-card h2, .graph-section h2 {
+    font-size: 1.4rem;
+  }
+
+  .nutrition-item span, .exercise-item span {
+    font-size: 0.9rem;
+  }
+
+  .trends-button {
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .search-bar input, .multi-input input {
+    font-size: 0.9rem;
+    padding: 10px 15px;
+  }
+
+  .action-button, .search-buttons button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  .nutrition-item, .exercise-item {
+    padding: 12px;
+  }
+
+  .exercise-tooltip .tooltip-text {
+    width: 180px;
+    font-size: 0.8rem;
+  }
+}
