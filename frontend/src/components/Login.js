@@ -1,7 +1,9 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './Login.css';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,18 +15,23 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/login', {
+      const response = await axios.post(`${API_URL}/api/login`, {
         username,
         password,
       });
       localStorage.setItem('userId', response.data.userId);
-      localStorage.setItem('token', response.data.token); // Store token for authentication
+      // Remove token storage since backend doesn't provide a token
       setMessage('Login successful');
       setTimeout(() => {
         navigate('/home');
-      }, 2000); // Redirect to home page after 2 seconds
+      }, 2000);
     } catch (err) {
-      setError(err.response?.data.message || 'Login failed');
+      console.error('Login error:', err);
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        'Login failed. Please check the backend connection.'
+      );
     }
   };
 

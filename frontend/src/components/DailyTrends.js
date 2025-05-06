@@ -14,6 +14,8 @@ import {
 } from 'recharts';
 import './DailyTrends.css';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const DailyTrends = () => {
   const [calorieData, setCalorieData] = useState([]);
   const [error, setError] = useState('');
@@ -33,7 +35,7 @@ const DailyTrends = () => {
           return;
         }
 
-        const response = await axios.get('http://localhost:5000/api/daily-trends', {
+        const response = await axios.get(`${API_URL}/api/daily-trends`, {
           params: { userId },
         });
 
@@ -46,7 +48,6 @@ const DailyTrends = () => {
           return;
         }
 
-        // Format data for bar chart
         const chartData = data.map(entry => ({
           date: entry.date,
           calories: entry.totalCalories || 0,

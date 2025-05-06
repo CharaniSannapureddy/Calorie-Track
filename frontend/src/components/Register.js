@@ -1,7 +1,9 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './Register.css';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -13,17 +15,22 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/register', {
+      const response = await axios.post(`${API_URL}/api/register`, {
         username,
         password,
       });
       setMessage(response.data.message);
       setError('');
       setTimeout(() => {
-        navigate('/'); // Redirect to login page after successful registration
+        navigate('/');
       }, 2000);
     } catch (err) {
-      setError(err.response?.data.message || 'Registration failed');
+      console.error('Register error:', err);
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        'Registration failed. Please check the backend connection.'
+      );
       setMessage('');
     }
   };

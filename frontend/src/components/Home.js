@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Confetti from 'react-confetti';
 import {
   FaBolt,
@@ -11,7 +11,7 @@ import {
   FaSun,
   FaWeight,
 } from 'react-icons/fa';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Bar,
   BarChart,
@@ -28,11 +28,13 @@ import walkIcon from '../assets/walk.png';
 import yogaIcon from '../assets/yoga.png';
 import './Home.css';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const Home = () => {
-  const [multiInputs, setMultiInputs] = useState ([]);
-  const [searchQuery, setSearchQuery] = useState ('');
-  const [nutritionData, setNutritionData] = useState ([]);
-  const [aggregatedData, setAggregatedData] = useState ({
+  const [multiInputs, setMultiInputs] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [nutritionData, setNutritionData] = useState([]);
+  const [aggregatedData, setAggregatedData] = useState({
     calories: 0,
     serving_size_g: 0,
     carbohydrates_total_g: 0,
@@ -44,54 +46,53 @@ const Home = () => {
     sodium_mg: 0,
     sugar_g: 0,
   });
-  const [totalCalories, setTotalCalories] = useState (0);
-  const [error, setError] = useState ('');
-  const [loading, setLoading] = useState (false);
-  const [showConfetti, setShowConfetti] = useState (false);
-  const [theme, setTheme] = useState ('light');
-  const navigate = useNavigate ();
+  const [totalCalories, setTotalCalories] = useState(0);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [theme, setTheme] = useState('light');
+  const navigate = useNavigate();
 
-  // Load data from localStorage on component mount
-  useEffect (() => {
-    const savedData = localStorage.getItem ('nutritionData');
-    const savedAggregatedData = localStorage.getItem ('aggregatedData');
-    const savedTotalCalories = localStorage.getItem ('totalCalories');
-    const savedSearchQuery = localStorage.getItem ('searchQuery');
-    const savedMultiInputs = localStorage.getItem ('multiInputs');
+  useEffect(() => {
+    const savedData = localStorage.getItem('nutritionData');
+    const savedAggregatedData = localStorage.getItem('aggregatedData');
+    const savedTotalCalories = localStorage.getItem('totalCalories');
+    const savedSearchQuery = localStorage.getItem('searchQuery');
+    const savedMultiInputs = localStorage.getItem('multiInputs');
 
-    if (savedData) setNutritionData (JSON.parse (savedData));
+    if (savedData) setNutritionData(JSON.parse(savedData));
     if (savedAggregatedData)
-      setAggregatedData (JSON.parse (savedAggregatedData));
-    if (savedTotalCalories) setTotalCalories (Number (savedTotalCalories));
-    if (savedSearchQuery) setSearchQuery (savedSearchQuery);
-    if (savedMultiInputs) setMultiInputs (JSON.parse (savedMultiInputs));
+      setAggregatedData(JSON.parse(savedAggregatedData));
+    if (savedTotalCalories) setTotalCalories(Number(savedTotalCalories));
+    if (savedSearchQuery) setSearchQuery(savedSearchQuery);
+    if (savedMultiInputs) setMultiInputs(JSON.parse(savedMultiInputs));
   }, []);
 
   const handleAddInput = () => {
     const updatedInputs = [...multiInputs, ''];
-    setMultiInputs (updatedInputs);
-    localStorage.setItem ('multiInputs', JSON.stringify (updatedInputs));
+    setMultiInputs(updatedInputs);
+    localStorage.setItem('multiInputs', JSON.stringify(updatedInputs));
   };
 
   const handleRemoveInput = index => {
     const updatedInputs = [...multiInputs];
-    updatedInputs.splice (index, 1);
-    setMultiInputs (updatedInputs);
-    localStorage.setItem ('multiInputs', JSON.stringify (updatedInputs));
+    updatedInputs.splice(index, 1);
+    setMultiInputs(updatedInputs);
+    localStorage.setItem('multiInputs', JSON.stringify(updatedInputs));
   };
 
   const handleInputChange = (index, value) => {
     const updatedInputs = [...multiInputs];
     updatedInputs[index] = value;
-    setMultiInputs (updatedInputs);
-    localStorage.setItem ('multiInputs', JSON.stringify (updatedInputs));
+    setMultiInputs(updatedInputs);
+    localStorage.setItem('multiInputs', JSON.stringify(updatedInputs));
   };
 
   const handleClearSearch = () => {
-    setSearchQuery ('');
-    setMultiInputs ([]);
-    setNutritionData ([]);
-    setAggregatedData ({
+    setSearchQuery('');
+    setMultiInputs([]);
+    setNutritionData([]);
+    setAggregatedData({
       calories: 0,
       serving_size_g: 0,
       carbohydrates_total_g: 0,
@@ -103,57 +104,53 @@ const Home = () => {
       sodium_mg: 0,
       sugar_g: 0,
     });
-    setTotalCalories (0);
-    setError ('');
-    // Clear localStorage
-    localStorage.removeItem ('nutritionData');
-    localStorage.removeItem ('aggregatedData');
-    localStorage.removeItem ('totalCalories');
-    localStorage.removeItem ('searchQuery');
-    localStorage.removeItem ('multiInputs');
+    setTotalCalories(0);
+    setError('');
+    localStorage.removeItem('nutritionData');
+    localStorage.removeItem('aggregatedData');
+    localStorage.removeItem('totalCalories');
+    localStorage.removeItem('searchQuery');
+    localStorage.removeItem('multiInputs');
   };
 
   const handleSearch = async () => {
     if (!searchQuery && multiInputs.length === 0) {
-      setError ('Please enter at least one food item to search');
+      setError('Please enter at least one food item to search');
       return;
     }
-    setError ('');
-    setLoading (true);
+    setError('');
+    setLoading(true);
     try {
-      const allQueries = [searchQuery, ...multiInputs].filter (
-        query => query.trim () !== ''
+      const allQueries = [searchQuery, ...multiInputs].filter(
+        query => query.trim() !== ''
       );
       if (allQueries.length === 0) {
-        setError ('Please enter at least one food item to search');
-        setLoading (false);
+        setError('Please enter at least one food item to search');
+        setLoading(false);
         return;
       }
-      const responses = await Promise.all (
-        allQueries.map (async query => {
-          const response = await axios.get (
-            'http://localhost:5000/api/nutrition',
-            {
-              params: {query},
-            }
-          );
+      const responses = await Promise.all(
+        allQueries.map(async query => {
+          const response = await axios.get(`${API_URL}/api/nutrition`, {
+            params: { query },
+          });
           return response.data;
         })
       );
-      const allData = responses.flat ();
-      const hasRestrictedData = allData.some (
+      const allData = responses.flat();
+      const hasRestrictedData = allData.some(
         item =>
           typeof item.calories === 'string' &&
-          item.calories.includes ('premium subscribers')
+          item.calories.includes('premium subscribers')
       );
       if (hasRestrictedData) {
-        setError (
+        setError(
           'Some nutritional data (e.g., calories) is only available for premium API subscribers.'
         );
-        setLoading (false);
+        setLoading(false);
         return;
       }
-      const aggregated = allData.reduce (
+      const aggregated = allData.reduce(
         (acc, item) => ({
           calories: acc.calories +
             (typeof item.calories === 'number' ? item.calories : 0),
@@ -193,111 +190,106 @@ const Home = () => {
           sugar_g: 0,
         }
       );
-      console.log ('Aggregated Data:', aggregated);
-      setAggregatedData (aggregated);
-      setTotalCalories (Number (aggregated.calories) || 0);
+      console.log('Aggregated Data:', aggregated);
+      setAggregatedData(aggregated);
+      setTotalCalories(Number(aggregated.calories) || 0);
       const graphData = [
-        {name: 'Carbohydrates', value: aggregated.carbohydrates_total_g},
-        {name: 'Saturated Fat', value: aggregated.fat_saturated_g},
-        {name: 'Total Fat', value: aggregated.fat_total_g},
-        {name: 'Fiber', value: aggregated.fiber_g},
-        {name: 'Potassium', value: aggregated.potassium_mg},
-        {name: 'Protein', value: aggregated.protein_g},
-        {name: 'Sodium', value: aggregated.sodium_mg},
-        {name: 'Sugar', value: aggregated.sugar_g},
+        { name: 'Carbohydrates', value: aggregated.carbohydrates_total_g },
+        { name: 'Saturated Fat', value: aggregated.fat_saturated_g },
+        { name: 'Total Fat', value: aggregated.fat_total_g },
+        { name: 'Fiber', value: aggregated.fiber_g },
+        { name: 'Potassium', value: aggregated.potassium_mg },
+        { name: 'Protein', value: aggregated.protein_g },
+        { name: 'Sodium', value: aggregated.sodium_mg },
+        { name: 'Sugar', value: aggregated.sugar_g },
       ];
-      setNutritionData (graphData);
-      const userId = localStorage.getItem ('userId');
-      const token = localStorage.getItem ('token');
-      await axios.post (
-        'http://localhost:5000/api/calories',
-        {
-          userId,
-          foodItem: allQueries.join (', '),
-          nutritionalValues: aggregated,
-        },
-        {
-          headers: {Authorization: `Bearer ${token}`},
-        }
-      );
-      setError ('');
-      setShowConfetti (true);
-      // Save to localStorage
-      localStorage.setItem ('nutritionData', JSON.stringify (graphData));
-      localStorage.setItem ('aggregatedData', JSON.stringify (aggregated));
-      localStorage.setItem ('totalCalories', aggregated.calories.toString ());
-      localStorage.setItem ('searchQuery', searchQuery);
+      setNutritionData(graphData);
+      const userId = localStorage.getItem('userId');
+      await axios.post(`${API_URL}/api/calories`, {
+        userId,
+        foodItem: allQueries.join(', '),
+        nutritionalValues: aggregated,
+      });
+      setError('');
+      setShowConfetti(true);
+      localStorage.setItem('nutritionData', JSON.stringify(graphData));
+      localStorage.setItem('aggregatedData', JSON.stringify(aggregated));
+      localStorage.setItem('totalCalories', aggregated.calories.toString());
+      localStorage.setItem('searchQuery', searchQuery);
       localStorage.setItem ('multiInputs', JSON.stringify (multiInputs));
     } catch (error) {
-      console.error ('Error fetching or saving calorie data:', error.message);
-      setError ('Failed to fetch or save calorie data: ' + error.message);
+      console.error('Error fetching or saving calorie data:', error);
+      setError(
+        error.response?.data?.message ||
+        error.message ||
+        'Failed to fetch or save calorie data. Please check the backend connection.'
+      );
     } finally {
-      setLoading (false);
+      setLoading(false);
     }
   };
 
   const handleShareResults = () => {
     const text = `
       Nutritional Values for "${[searchQuery, ...multiInputs]
-                                .filter (q => q)
-                                .join (', ')}":
-      Total Calories: ${totalCalories.toFixed (2)} kcal
-      Serving Size: ${aggregatedData.serving_size_g.toFixed (2)}g
-      Carbohydrates: ${aggregatedData.carbohydrates_total_g.toFixed (2)}g
-      Saturated Fat: ${aggregatedData.fat_saturated_g.toFixed (2)}g
-      Total Fat: ${aggregatedData.fat_total_g.toFixed (2)}g
-      Fiber Content: ${aggregatedData.fiber_g.toFixed (2)}g
-      Potassium: ${aggregatedData.potassium_mg.toFixed (2)}mg
-      Protein: ${aggregatedData.protein_g.toFixed (2)}g
-      Sodium: ${aggregatedData.sodium_mg.toFixed (2)}mg
-      Sugar: ${aggregatedData.sugar_g.toFixed (2)}g
+        .filter(q => q)
+        .join(', ')}":
+      Total Calories: ${totalCalories.toFixed(2)} kcal
+      Serving Size: ${aggregatedData.serving_size_g.toFixed(2)}g
+      Carbohydrates: ${aggregatedData.carbohydrates_total_g.toFixed(2)}g
+      Saturated Fat: ${aggregatedData.fat_saturated_g.toFixed(2)}g
+      Total Fat: ${aggregatedData.fat_total_g.toFixed(2)}g
+      Fiber Content: ${aggregatedData.fiber_g.toFixed(2)}g
+      Potassium: ${aggregatedData.potassium_mg.toFixed(2)}mg
+      Protein: ${aggregatedData.protein_g.toFixed(2)}g
+      Sodium: ${aggregatedData.sodium_mg.toFixed(2)}mg
+      Sugar: ${aggregatedData.sugar_g.toFixed(2)}g
     `;
-    navigator.clipboard.writeText (text).then (() => {
-      alert ('Results copied to clipboard!');
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Results copied to clipboard!');
     });
   };
 
   const toggleTheme = () => {
-    setTheme (theme === 'light' ? 'dark' : 'light');
+    setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
   const handleLogout = () => {
-    localStorage.removeItem ('userId');
-    localStorage.removeItem ('token');
-    localStorage.removeItem ('nutritionData');
-    localStorage.removeItem ('aggregatedData');
-    localStorage.removeItem ('totalCalories');
-    localStorage.removeItem ('searchQuery');
-    localStorage.removeItem ('multiInputs');
-    navigate ('/');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('nutritionData');
+    localStorage.removeItem('aggregatedData');
+    localStorage.removeItem('totalCalories');
+    localStorage.removeItem('searchQuery');
+    localStorage.removeItem('multiInputs');
+    navigate('/');
   };
 
   const calculateExerciseDuration = (calories, caloriesPerMinute) => {
-    return Math.round (calories / caloriesPerMinute) || 0;
+    return Math.round(calories / caloriesPerMinute) || 0;
   };
 
   const handleBarClick = data => {
     if (data && data.value) {
-      alert (`${data.name}: ${data.value.toFixed (2)}`);
+      alert(`${data.name}: ${data.value.toFixed(2)}`);
     }
   };
 
-  const joggingMinutes = calculateExerciseDuration (totalCalories, 10);
-  const yogaMinutes = calculateExerciseDuration (totalCalories, 5);
-  const gymMinutes = calculateExerciseDuration (totalCalories, 8);
-  const walkingMinutes = calculateExerciseDuration (totalCalories, 4);
+  const joggingMinutes = calculateExerciseDuration(totalCalories, 10);
+  const yogaMinutes = calculateExerciseDuration(totalCalories, 5);
+  const gymMinutes = calculateExerciseDuration(totalCalories, 8);
+  const walkingMinutes = calculateExerciseDuration(totalCalories, 4);
 
   const graphData = nutritionData.length
     ? nutritionData
     : [
-        {name: 'Carbohydrates', value: 0},
-        {name: 'Saturated Fat', value: 0},
-        {name: 'Total Fat', value: 0},
-        {name: 'Fiber', value: 0},
-        {name: 'Potassium', value: 0},
-        {name: 'Protein', value: 0},
-        {name: 'Sodium', value: 0},
-        {name: 'Sugar', value: 0},
+        { name: 'Carbohydrates', value: 0 },
+        { name: 'Saturated Fat', value: 0 },
+        { name: 'Total Fat', value: 0 },
+        { name: 'Fiber', value: 0 },
+        { name: 'Potassium', value: 0 },
+        { name: 'Protein', value: 0 },
+        { name: 'Sodium', value: 0 },
+        { name: 'Sugar', value: 0 },
       ];
 
   const tooltipStyle = theme === 'light'
@@ -318,14 +310,15 @@ const Home = () => {
 
   return (
     <div className={`home-container ${theme}`}>
-      {showConfetti &&
+      {showConfetti && (
         <Confetti
           width={window.innerWidth}
           height={window.innerHeight}
           recycle={false}
           numberOfPieces={200}
-          onConfettiComplete={() => setShowConfetti (false)}
-        />}
+          onConfettiComplete={() => setShowConfetti(false)}
+        />
+      )}
       <div className="header">
         <button className="theme-toggle" onClick={toggleTheme}>
           {theme === 'light' ? <FaMoon /> : <FaSun />}
@@ -342,23 +335,23 @@ const Home = () => {
             placeholder="Search food item (e.g., dosa, apple)..."
             value={searchQuery}
             onChange={e => {
-              setSearchQuery (e.target.value);
-              localStorage.setItem ('searchQuery', e.target.value);
+              setSearchQuery(e.target.value);
+              localStorage.setItem('searchQuery', e.target.value);
             }}
           />
         </div>
         <div className="multi-inputs-container">
-          {multiInputs.map ((input, index) => (
+          {multiInputs.map((input, index) => (
             <div key={index} className="multi-input">
               <input
                 type="text"
                 placeholder={`Enter food item ${index + 1}`}
                 value={input}
-                onChange={e => handleInputChange (index, e.target.value)}
+                onChange={e => handleInputChange(index, e.target.value)}
               />
               <button
                 className="remove-btn"
-                onClick={() => handleRemoveInput (index)}
+                onClick={() => handleRemoveInput(index)}
               >
                 ❌
               </button>
@@ -385,62 +378,51 @@ const Home = () => {
             <div className="nutrition-item">
               <FaBolt className="nutrition-icon" />
               <span>
-                <strong>Total Calories:</strong>
-                {' '}
-                {totalCalories.toFixed (2)}
-                {' '}
-                kcal
+                <strong>Total Calories:</strong> {totalCalories.toFixed(2)} kcal
               </span>
             </div>
             <div className="nutrition-item">
               <FaWeight className="nutrition-icon" />
               <span>
-                <strong>Serving Size:</strong>
-                {' '}
-                {aggregatedData.serving_size_g.toFixed (2)}
-                g
+                <strong>Serving Size:</strong>{' '}
+                {aggregatedData.serving_size_g.toFixed(2)}g
               </span>
             </div>
             <div className="nutrition-item">
               <FaCarrot className="nutrition-icon" />
               <span>
-                Carbohydrates:
-                {' '}
-                {aggregatedData.carbohydrates_total_g.toFixed (2)}
-                g
+                Carbohydrates: {aggregatedData.carbohydrates_total_g.toFixed(2)}g
               </span>
             </div>
             <div className="nutrition-item">
               <FaDumbbell className="nutrition-icon" />
               <span>
-                Saturated Fat: {aggregatedData.fat_saturated_g.toFixed (2)}g
+                Saturated Fat: {aggregatedData.fat_saturated_g.toFixed(2)}g
               </span>
             </div>
             <div className="nutrition-item">
               <FaDumbbell className="nutrition-icon" />
-              <span>Total Fat: {aggregatedData.fat_total_g.toFixed (2)}g</span>
+              <span>Total Fat: {aggregatedData.fat_total_g.toFixed(2)}g</span>
             </div>
             <div className="nutrition-item">
               <FaLeaf className="nutrition-icon" />
-              <span>Fiber Content: {aggregatedData.fiber_g.toFixed (2)}g</span>
+              <span>Fiber Content: {aggregatedData.fiber_g.toFixed(2)}g</span>
             </div>
             <div className="nutrition-item">
               <FaCarrot className="nutrition-icon" />
-              <span>
-                Potassium: {aggregatedData.potassium_mg.toFixed (2)}mg
-              </span>
+              <span>Potassium: {aggregatedData.potassium_mg.toFixed(2)}mg</span>
             </div>
             <div className="nutrition-item">
               <FaDumbbell className="nutrition-icon" />
-              <span>Protein: {aggregatedData.protein_g.toFixed (2)}g</span>
+              <span>Protein: {aggregatedData.protein_g.toFixed(2)}g</span>
             </div>
             <div className="nutrition-item">
               <FaCarrot className="nutrition-icon" />
-              <span>Sodium: {aggregatedData.sodium_mg.toFixed (2)}mg</span>
+              <span>Sodium: {aggregatedData.sodium_mg.toFixed(2)}mg</span>
             </div>
             <div className="nutrition-item">
               <FaCandyCane className="nutrition-icon" />
-              <span>Sugar: {aggregatedData.sugar_g.toFixed (2)}g</span>
+              <span>Sugar: {aggregatedData.sugar_g.toFixed(2)}g</span>
             </div>
           </div>
           <button className="share-btn" onClick={handleShareResults}>
@@ -448,7 +430,9 @@ const Home = () => {
           </button>
         </div>
         <div className="exercise-card">
-          <h2>To burn {totalCalories.toFixed (2)} calories you will have to</h2>
+          <h2>
+            To burn {totalCalories.toFixed(2)} calories you will have to
+          </h2>
           <div className="exercise-grid">
             <div className="exercise-item">
               <img src={jogIcon} alt="Jog" />
@@ -471,10 +455,7 @@ const Home = () => {
             <div className="exercise-item">
               <img src={gymIcon} alt="Gym Workout" />
               <span className="exercise-tooltip">
-                Gym Workout — you will have to lift weights for
-                {' '}
-                {gymMinutes}
-                {' '}
+                Gym Workout — you will have to lift weights for {gymMinutes}{' '}
                 minutes
                 <span className="tooltip-text">
                   Burns ~8 calories per minute
@@ -507,7 +488,7 @@ const Home = () => {
             <XAxis dataKey="name" className="chart-axis" />
             <YAxis className="chart-axis" />
             <Tooltip contentStyle={tooltipStyle} />
-            <Legend wrapperStyle={{fontSize: '14px', fontWeight: 600}} />
+            <Legend wrapperStyle={{ fontSize: '14px', fontWeight: 600 }} />
             <Bar
               dataKey="value"
               fill="url(#barGradient)"
@@ -521,7 +502,7 @@ const Home = () => {
       <div className="footer-button">
         <button
           className="trends-button"
-          onClick={() => navigate ('/daily-trends')}
+          onClick={() => navigate('/daily-trends')}
         >
           View Daily Trends
         </button>
