@@ -3,17 +3,22 @@ const cors = require ('cors');
 const axios = require ('axios');
 const mongoose = require ('mongoose');
 const bcrypt = require ('bcryptjs');
-require ('dotenv').config (); // Already present, ensures .env variables are loaded
+require ('dotenv').config ();
 
 const User = require ('./models/User');
 const Calorie = require ('./models/Calorie');
 
 const app = express ();
-const port = process.env.PORT || 5000; // Updated variable name to lowercase for consistency
+const port = process.env.PORT || 5000;
 
 // Middleware
-app.use (cors ({origin: 'http://localhost:3000'}));
+app.use (cors ({origin: '*'}));
 app.use (express.json ());
+
+// Root route to confirm backend is running
+app.get ('/', (req, res) => {
+  res.json ({message: 'Calorie Tracker Backend is running'});
+});
 
 // Connect to MongoDB
 mongoose
@@ -76,7 +81,7 @@ app.post ('/api/login', async (req, res) => {
 // Nutrition API Endpoint (Using CalorieNinjas API)
 app.get ('/api/nutrition', async (req, res) => {
   const query = req.query.query;
-  const apiKey = process.env.CALORIE_NINJAS_API_KEY; // Updated to use environment variable
+  const apiKey = process.env.CALORIE_NINJAS_API_KEY;
 
   try {
     const response = await axios.get (
@@ -146,7 +151,7 @@ app.post ('/api/calories', async (req, res) => {
   }
 });
 
-// Fetch Daily Trends Endpoint (Updated to Handle userId as String)
+// Fetch Daily Trends Endpoint
 app.get ('/api/daily-trends', async (req, res) => {
   const {userId} = req.query;
 
@@ -155,16 +160,14 @@ app.get ('/api/daily-trends', async (req, res) => {
   }
 
   try {
-    // Check if the database connection is active
     if (mongoose.connection.readyState !== 1) {
       throw new Error ('Database connection is not active');
     }
 
-    // Aggregate calorie data by date, treating userId as a string
     const dailyCalories = await Calorie.aggregate ([
       {
         $match: {
-          userId: userId, // Treat userId as a string
+          userId: userId,
         },
       },
       {
@@ -194,6 +197,6 @@ app.get ('/api/daily-trends', async (req, res) => {
   }
 });
 
-app.listen (port, () => {
-  console.log (`Server running on http://localhost:${port}`);
+app.listen (port, '0.0.0.0', () => {
+  console.log (`Server running on http://0.0.0.0:${port}`);
 });
